@@ -179,12 +179,40 @@ public class Controller : MonoBehaviour
         tiles[clickedTile].current = true;
         FindSelectableTiles(false);
 
-        /*TODO: Cambia el código de abajo para hacer lo siguiente
-        - Elegimos una casilla aleatoria entre las seleccionables que puede ir el caco
-        - Movemos al caco a esa casilla
-        - Actualizamos la variable currentTile del caco a la nueva casilla
-        */
-        robber.GetComponent<RobberMove>().MoveToTile(tiles[robber.GetComponent<RobberMove>().currentTile]);
+        // Calcular la distancia de cada casilla a los policías y guardar la distancia más grande y la casilla
+        Tile newTile = robberMove();
+
+        robber.GetComponent<RobberMove>().MoveToTile(newTile);
+        robber.GetComponent<RobberMove>().currentTile = newTile.numTile;
+    }
+
+
+    public Tile robberMove()
+    {
+        float distancia1 = 0f;
+        float distancia2 = 0f;
+        Tile lejano = null;
+        float distancia12;
+        float distancia22;
+
+        foreach (Tile tile in tiles)
+        {
+            if (tile.selectable)
+            {
+                distancia12 = Vector3.Distance(tile.transform.position, cops[0].transform.position);
+                distancia22 = Vector3.Distance(tile.transform.position, cops[1].transform.position);
+
+                if (distancia12 > distancia1 && distancia22 > distancia2)
+                {
+                    distancia1 = distancia12;
+                    distancia2 = distancia22;
+
+                    lejano = tile;
+                }
+            }
+        }
+
+        return lejano;
     }
 
     public void EndGame(bool end)
