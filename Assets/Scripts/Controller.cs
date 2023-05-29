@@ -48,15 +48,54 @@ public class Controller : MonoBehaviour
 
     public void InitAdjacencyLists()
     {
-        //Matriz de adyacencia
-        int[,] matriu = new int[Constants.NumTiles, Constants.NumTiles];
+        List<List<int>> adjacency = new List<List<int>>();
 
-        //TODO: Inicializar matriz a 0's
+        // Inicializar la lista de adyacencia para cada casilla
+        for (int i = 0; i < Constants.NumTiles; i++)
+        {
+            adjacency.Add(new List<int>());
+        }
 
-        //TODO: Para cada posición, rellenar con 1's las casillas adyacentes (arriba, abajo, izquierda y derecha)
+        // Rellenar la lista de adyacencia para cada casilla
+        for (int i = 0; i < Constants.NumTiles; i++)
+        {
+            int row = i / 8;
+            int col = i % 8;
 
-        //TODO: Rellenar la lista "adjacency" de cada casilla con los índices de sus casillas adyacentes
+            // Agregar la casilla de arriba a la lista de adyacencia
+            if (row > 0)
+            {
+                int aboveIndex = (row - 1) * 8 + col;
+                adjacency[i].Add(aboveIndex);
+            }
 
+            // Agregar la casilla de abajo a la lista de adyacencia
+            if (row < 7)
+            {
+                int belowIndex = (row + 1) * 8 + col;
+                adjacency[i].Add(belowIndex);
+            }
+
+            // Agregar la casilla de la izquierda a la lista de adyacencia
+            if (col > 0)
+            {
+                int leftIndex = row * 8 + (col - 1);
+                adjacency[i].Add(leftIndex);
+            }
+
+            // Agregar la casilla de la derecha a la lista de adyacencia
+            if (col < 7)
+            {
+                int rightIndex = row * 8 + (col + 1);
+                adjacency[i].Add(rightIndex);
+            }
+        }
+
+        // Actualizar la lista de adyacencia de cada casilla
+        for (int i = 0; i < Constants.NumTiles; i++)
+        {
+            tiles[i].adjacency = adjacency[i];
+        }
     }
 
     //Reseteamos cada casilla: color, padre, distancia y visitada
